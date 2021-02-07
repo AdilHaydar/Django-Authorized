@@ -1,1 +1,1 @@
-"# Django-Authorized" 
+# Django-Authorized"
