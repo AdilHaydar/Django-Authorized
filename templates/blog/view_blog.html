@@ -1,0 +1,29 @@
+{% load group_perms %}
+<html>
+<head>
+
+</head>
+<body>
+
+{% for post in posts %}
+
+    {% if request.user|is_authorized:'view_post' %}
+    <h3><a href="{% url 'show_post' post.id %}">{{post.title}}</a></h3> 
+    
+    {% else %}
+    <h3>{{post.title}}</h3> 
+    {% endif %}
+    <br>
+    <img src="{{post.image.url}}" width="250px" heigth="250px"><br>
+    <p>{{post.content|safe|truncatewords:10}}</p>
+    <small>{{post.created_date}} - {{post.user.username}}</small>
+    <hr>
+
+{% endfor %}
+
+{% if request.user|is_authorized:'add_post' %}
+<a href="{% url 'add_post' %}">Add Post</a>
+{% endif %}
+
+</body>
+</html>

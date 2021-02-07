@@ -1,0 +1,18 @@
+{% load group_perms %}
+<html>
+<head>
+
+</head>
+<body>
+
+<h2>{{post.title}}</h2> <br>
+<small>{{post.created_date}} - {{post.user.username}}</small> <br>
+<img src="{{post.image.url}}" width="750px" heigth="750px"><br>
+
+<p>{{post.content|safe}}</p>
+
+{% if request.user|is_authorized:'change_post' %}
+<a href="{% url 'edit_post' post.id %}">Edit</a>
+{% endif %}
+</body>
+</html>
