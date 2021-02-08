@@ -11,3 +11,14 @@ def is_authorized(user,perm):
             return True
     else:
         return False
+    
+@register.filter(name='dropdown_filter')
+def dropdown_filter(user,perms):
+    if user.is_superuser:
+        return True
+    perms = set(perms.split(' '))
+    user_perms = set(user.group.permissions.values_list('codename',flat=True))
+    if len(perms.intersection(user_perms)) != 0:
+        return True
+    
+    return False
