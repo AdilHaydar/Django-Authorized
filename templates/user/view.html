@@ -1,0 +1,43 @@
+{% extends "back_end/user/main_user.html" %}
+
+{% block content %}
+
+
+<div align="center">
+<label><b>User Information {{c}}</b></label>
+<table class="table table-hover" style="width:40%;border-radius: 10px;" >
+<thead>
+    <tr>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+    <td >Username</td>
+    <td>{{request.user.username}}</td>
+    </tr>
+    <tr>
+        <td >Email</td>
+        <td>{{request.user.email}}</td>
+    </tr>
+    <tr>
+        <td >Phone</td>
+        <td>{{request.user.phone}}</td>
+    </tr>
+    <tr>
+        <td >Gender</td>
+        <td>{{request.user.gender}}</td>
+    </tr>
+    <tr>
+        <td >Group</td>
+        <td>{{request.user.group.name}}</td>
+    </tr>
+    <tr>
+        <td>Registered Date</td>
+        <td>{{request.user.timestamp}}</td>
+    </tr>
+</tbody>
+</table>
+<a href="{% url 'user-edit' request.user.username %}">Edit Profile</a>
+</div>
+    
+{% endblock %}
