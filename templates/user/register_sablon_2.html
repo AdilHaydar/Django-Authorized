@@ -1,0 +1,85 @@
+{% load static %}
+{% load widget_tweaks %}
+<html>
+
+<head>
+    <link href="{% static 'css/register_sablon.css'%}" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+<div class="container-fluid register">
+    {% include "../messages.html" %}
+    <div class="row">
+        <div class="col-md-3 register-left">
+            <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt=""/>
+            <h3>Welcome</h3>
+            <p>You are 30 seconds away from earning your own money!</p>
+            <input type="submit" name="" value="Login" href="{% url 'login' %}" onclick="redirect_login(this)"/><br/>
+        </div>
+        <div class="col-md-9 register-right">
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <h3 class="register-heading">Sign Up</h3>
+                    <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row register-form">
+                        <div class="col-md-6">
+                        
+                        <div class="form-group">
+                                {% render_field form.username placeholder='Username' %}
+                            </div>
+                            <div class="form-group">
+                                {% render_field form.name placeholder='Name' %}
+                            </div>
+                            <div class="form-group">
+                                {% render_field form.surname placeholder='Surname' %}
+                            </div>
+                            <div class="form-group">
+                                {% render_field form.password placeholder='Password' %}
+                            </div>
+                            <div class="form-group">
+                                {% render_field form.confirm placeholder='Confirm Password' %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% render_field form.email placeholder='Email Address' %}
+                            </div>
+                            <div class="form-group">
+                                {% render_field form.phone placeholder='Phone Number' minlength='10' maxlength='13' type='tel' %}
+                            </div>
+                            <div class="form-group">
+                                {% render_field form.gender placeholder='Specify Gender' %}
+                            </div>
+                            <div class="form-group">
+                                <label class="custom_file_upload">
+                                    <i class="fas fa-upload file_upload form-control">Profile Picture</i>
+                                    {% render_field form.picture %}
+                                </label>
+                            </div>
+                            <input type="submit" class="btnRegister"  value="Register"/>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+
+    function redirect_login(param)
+    {
+        window.location = '/user/login/'
+    }
+
+</script>
+</body>
+</html>
