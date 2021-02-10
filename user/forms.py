@@ -1,12 +1,15 @@
 from django import forms
-from .models import User
+from .models import User, UserUpdateModel
 from django.contrib.auth.forms import ReadOnlyPasswordHashField, UserChangeForm
+from phonenumber_field.formfields import PhoneNumberField
 
 gender = (
     ('','Specify Gender'),
     ('Female','Female'),
     ('Male','Male')
 )
+
+
 
 
 class UserAdminCreationForm(forms.ModelForm):
@@ -75,7 +78,7 @@ class LoginForm(forms.Form):
 class RegisterForm(forms.Form):
     class Meta:
         model = User
-        fields = ['username', 'email', 'picture','gender', 'name','surname', 'password', 'confirm']
+        fields = ['username', 'email', 'picture','gender', 'name','surname', 'phone', 'password', 'confirm']
 
     def __init__(self,*args,**kwargs):
         super(RegisterForm, self).__init__(*args,**kwargs)
@@ -88,6 +91,7 @@ class RegisterForm(forms.Form):
     gender = forms.ChoiceField(choices=gender,label="Gender")
     name = forms.CharField(label='Name', required=True)
     surname = forms.CharField(label='Surname', required=True)
+    phone = forms.CharField(required=False, label="Phone")
     password = forms.CharField(label="Password",widget = forms.PasswordInput)
     confirm = forms.CharField(label = 'Confirm Password', widget = forms.PasswordInput)
 	
@@ -97,6 +101,7 @@ class RegisterForm(forms.Form):
         password = self.cleaned_data.get('password')
         confirm = self.cleaned_data.get('confirm')
         email = self.cleaned_data.get('email')
+        phone = self.cleaned_data.get('phone')
         name = self.cleaned_data.get('name')
         surname = self.cleaned_data.get('surname')
         picture = self.cleaned_data.get('picture')
@@ -116,6 +121,7 @@ class RegisterForm(forms.Form):
         'picture':picture,
         'name':name,
         'surname':surname,
+        'phone':phone,
         'gender':gender,
         }
 
@@ -124,7 +130,7 @@ class RegisterForm(forms.Form):
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email','name','gender','surname','picture', 'password', 'confirm']
+        fields = ['username', 'email','name','gender','surname','phone','picture', 'password', 'confirm', 'admin']
 
     def __init__(self,*args,**kwargs):
         super(UserUpdateForm, self).__init__(*args,**kwargs)
@@ -138,19 +144,23 @@ class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField(label = 'Email')
     name = forms.CharField(label='Name', required=True)
     surname = forms.CharField(label='Surname', required=True)
+    phone = PhoneNumberField(required=False)
     password = forms.CharField(label = 'Password', widget = forms.PasswordInput, required=False)
     confirm = forms.CharField(label = 'Confirm Password', widget = forms.PasswordInput, required=False)
     gender = forms.ChoiceField(choices=gender,label = 'Gender', required=False)
+    admin = forms.BooleanField(label = 'Super User', required=False)
 
     def clean(self):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
         confirm = self.cleaned_data.get('confirm')
         email = self.cleaned_data.get('email')
+        phone = self.cleaned_data.get('phone')
         name = self.cleaned_data.get('name')
         surname = self.cleaned_data.get('surname')
         picture = self.cleaned_data.get('picture')
         gender = self.cleaned_data.get('gender')
+        admin = self.cleaned_data.get('admin')
 
         if password and confirm and password != confirm:
             raise forms.ValidationError("Passwords doesn't match")
@@ -166,7 +176,9 @@ class UserUpdateForm(forms.ModelForm):
         'picture':picture,
         'name':name,
         'surname':surname,
-        'gender':gender
+        'phone':phone,
+        'gender':gender,
+        'admin':admin
         }
 
         return values
