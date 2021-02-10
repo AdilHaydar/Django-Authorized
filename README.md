@@ -158,3 +158,6 @@ in HTML file
 ```
 
 Bu filtre sayesinde içi boş dropdown menülerin görüntülenmesi engellenmektedir.
+
+### SON OLARAK
+Son olarak bir kullanıcı admin ise, yani is_superusuer property'si True dönüyor ise her türlü yetkiye hangi grupta olduğundan bağımsız bir şekilde sahiptir. Aynı zamanda sadece bir superuser başka bir kullanıcıyı superuser olarak atayabilir fakat bir superuser ne kendi, ne de başka bir superuser üzerinde bir değişiklik yapamamaktadır. Yani bir kullanıcıyı superuser olarak atarsanız o yetkiyi o kullanıcıdan geri alamazsınız.
