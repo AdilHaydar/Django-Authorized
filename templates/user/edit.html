@@ -1,0 +1,52 @@
+{% extends "back_end/user/main_user.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row">
+    <form method="POST" enctype="multipart/form-data" id="edit-form">
+        {% csrf_token %}
+        
+        {% for f in form %}
+        
+        {% if f.name == 'picture' %}
+            {% if f.value %}
+            <label class="form-label">Currently :</label> 
+            <img src="{{form.instance.picture.url}}" style="width:100px;height:100px;">
+            <input type="checkbox" name="picture-clear" id="picture-clear_id" value="Clear">
+            <br>
+            <label class="form-label">Change : </label>
+            <input type="file" name="picture" accept="image/*" class="clearablefileinput" id="id_picture">
+            <br>
+            {% else %}
+            <label class="form-label">
+                {{f.label}} : 
+            </label>
+            {{f}} 
+            <br>
+            {% endif %}
+        {% else %}
+            {% if f.name == 'admin' %}
+                {% if request.user.is_superuser %}
+                    {% if request.user != form.instance %}
+                        
+                        <label class="form-label">{{f.label}} :</label>
+                        {{f}}
+                        <br>
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                <label class="form-label">
+                    {{f.label}} : 
+                </label>
+                {{f}} 
+                <br>
+            {% endif %}
+        {% endif %}
+       
+        {% endfor %}
+        
+        <input type="submit" class="btn btn-outline-primary" value="Edit" id="id_edit">
+    </form>
+</div>
+{% endblock %}
