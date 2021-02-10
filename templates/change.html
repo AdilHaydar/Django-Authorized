@@ -1,0 +1,50 @@
+{% extends "back_end/user/main_user.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-6">
+        
+        </div>
+        <div class="col-12">
+            <form method="GET" align="center">
+                <input type="text" name="username" class="form-style" style="width:50%;">
+                <input type="submit" value ="Search" class="btn btn-outline-info" style="margin-top:-2">
+            </form>
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col">Group</th>
+                    <th scope="col">Select Group</th>
+                    <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for user in users %}
+                    <form method="POST">
+                    {% csrf_token %}
+                    <tr>
+                        <input type="hidden" name="user_id" value="{{user.id}}">
+                        <td name="deneme" value="deneme">{{user.username}}</td>
+                        <td>{{user.group.name}}</td>
+                        <td>
+                        <select name="groups" class="form-style">
+                            {% for group in groups %}
+                            <option value="{{group.name}}" {% if group.name == user.group.name %} selected {% endif %}>{{group.name}}</option>
+                            {% endfor %}
+                        </td>
+                        <td><input type="submit" value="Set Group" class="btn btn-outline-dark"></td>
+                    </tr>
+                    </form>
+                    {% endfor %}
+                </tbody>
+                </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

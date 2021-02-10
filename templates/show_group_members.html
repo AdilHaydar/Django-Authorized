@@ -1,0 +1,32 @@
+{% extends "back_end/user/main_user.html" %}
+{% load permission_helper %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            {% if request.user|is_authorized:'view_group' %}
+                <label><b>Groups</b></label>
+                <div style="width: 100%; height: 250px; overflow-y: scroll; margin-bottom: 10px;border:1px inset lightgray;padding: 5px;">
+                    
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Username</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for member in group_members %}
+                                    <tr>
+                                        <td scope="row">{{member.username}}</td>
+                                        {% if request.user|is_authorized:'change_user' %}<td scope="row"><a href="{% url 'edit-user' member.username %}" class="btn-sm btn-warning">Edit User</a>{% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

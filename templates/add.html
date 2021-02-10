@@ -1,0 +1,52 @@
+{% extends "back_end/user/main_user.html" %}
+{% load permission_helper %}
+{% block content %}
+<div class="container-fluid">
+
+    <div align="center">
+        <form method="POST">
+            {% csrf_token %}
+            <label>Add New Group</label> <input type="text" name="group" placeholder="Set Group Name" class="form-style">
+            <input type="submit" value="Submit" class="btn btn-outline-primary" style="margin-top:-2px;">
+        </form>
+        <a href="{% url 'set-perm' %}">Change Group Permissions</a>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            {% if request.user|is_authorized:'delete_group' %}
+            <form method="POST">
+                {% csrf_token %}
+                <label><b>Groups</b></label>
+                <div style="width: 100%; height: 600px; overflow-y: scroll; margin-bottom: 10px;border:1px inset lightgray;padding: 5px;">
+                    
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Group Name</th>
+                                <th scope="col">Member Count</th>
+                                <th scope="col">Group Members</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for group in groups %}
+                                    <tr>
+                                        <th scope="row"><input type="checkbox" name="delete" value="{{group.id}}" {% if group.name == default_group %}disabled title='You cant delete this group'{% endif %}></th>
+                                        <td>{{group.name}}</td>
+                                        <td>{{group.user.count}}</td>
+                                        <td><a href="" target="popup" onclick="window.open('{% url 'show-group-members' group.name %}','popup','width=600,height=600'); return false;">Show Group Members</a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        
+                        {{group}}
+                        <br>
+                </div>
+                <input type="submit" value="Delete" class="btn btn-outline-danger">
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

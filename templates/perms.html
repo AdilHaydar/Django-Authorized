@@ -1,0 +1,51 @@
+{% extends "back_end/user/main_user.html" %}
+{% load permission_helper %}
+{% block content %}
+
+<div class="row">
+    <div class="col-12">
+        <form method="GET">
+        <select name="groups" class="form-style" style="width:40%">
+                {% for group in groups %}
+                    <option value="{{group.id}}" {% if selected_group|is_selected:group.name %}selected{% endif %}>{{group.name}}</option>
+                {% endfor %}
+            </select> 
+            <input type="submit" value="Choice a Role" class="btn btn-outline-primary" style="margin-top:-1px;">
+            <hr>
+        </form>
+        
+        <form method="POST" {% if selected_group %}action="{% url 'add-delete-perm' selected_group.id %}"{% endif %}>
+            <div style="width: 99%; height: 600px; overflow-y: scroll; margin-bottom: 10px;">
+                {% csrf_token %}
+                <b>{{selected_group|upper}}</b>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">App Name</th>
+                        <th scope="col">Model Name</th>
+                        <th scope="col">Permission</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for perm in perms %}
+                            {% if perm.content_type.app_label in apps %}
+                            <tr>
+                                <th scope="row"><input type="checkbox" class="checkbox-control" name="perms" value="{{perm.id}}" {% if perm in selected_group.permissions.all %}checked{% endif %}></th>
+                                <td>{{perm.content_type.app_label}}</td>
+                                <td>{{perm.content_type.name}}</td>
+                                <td>{{perm.name}}</td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+            </div>
+            <input type="submit" value="Set Perm" class="btn btn-outline-primary">
+        </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
