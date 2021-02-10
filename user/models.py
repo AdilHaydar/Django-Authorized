@@ -4,6 +4,7 @@ from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import UserManager
+from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import Group
 # Create your models here.
 
@@ -74,6 +75,7 @@ class User(AbstractBaseUser):
     surname = models.CharField(verbose_name="surname",max_length=20, blank=False, null=False)
     picture = models.ImageField(verbose_name="Picture",null=True, blank=True,upload_to=upload_to)
     email = models.EmailField(unique=True, verbose_name = 'Email Address', validators=[validate_email], max_length=255)
+    phone = PhoneNumberField(verbose_name="Phone",null=True, blank=True, unique=True)
     gender = models.CharField(verbose_name="Gender",max_length=10, null=True, blank=True, default='')
     active = models.BooleanField(default = True)
     staff = models.BooleanField(default = False)
@@ -107,14 +109,22 @@ class User(AbstractBaseUser):
         return self.active
 
     def has_perm(self, perm, obj=None):
-        return self.is_superuser
+        if self.is_superuser and self.is_active:
+            return True
+        if self.group:
+            if perm in self.group.permissions.values_list('codename',flat=True):
+                return True
+            return False
 
     def has_module_perms(self, app_label):
        return self.admin
 
-class UserPermission(models.Model):
-    group = models.OneToOneField(Group, on_delete=models.SET_NULL, null=True, blank=True)
-    add = models.BooleanField(verbose_name='Add',default=False)
-    delete = models.BooleanField(verbose_name='Delete',default=False)
-    update = models.BooleanField(verbose_name='Update',default=False)
-    view = models.BooleanField(verbose_name='View',default=False)
+
+class UserUpdateModel(models.Model):
+    email = models.EmailField(
+        max_length=255,
+        unique=True,
+        verbose_name = "Email",
+    )
+
+
